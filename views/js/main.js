@@ -444,16 +444,11 @@ var resizePizzas = function(size) {
 
     // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
     function determineDx(elemWidth, size, pizzaWindowWidth) {
-        var oldWidth = elemWidth;
-        var windowWidth = pizzaWindowWidth;
-        var oldSize = oldWidth / windowWidth;
+
 
         // TODO: change to 3 sizes? no more xl?
         // Changes the slider value to a percent width
-        function sizeSwitcher(size) {
-            // convert to value between 0 and 1
-            return size / 100
-        }
+
 
         var newSize = sizeSwitcher(size);
         var dx = (newSize - oldSize) * windowWidth;
@@ -465,15 +460,28 @@ var resizePizzas = function(size) {
 
     // Iterates through pizza elements on the page and changes their widths
     function changePizzaSizes(size) {
-    var pizzaContainers = document.querySelectorAll(".randomPizzaContainer");
-    var pizzaWindowWidth = document.querySelector("#randomPizzas").offsetWidth;
+        var pizzaContainers = document.querySelectorAll(".randomPizzaContainer");
+        var newWidth;
 
-    // all pizzas are the same, so get the offset of the first one and re-use it
-    var elemWidth = pizzaContainers[0].offsetWidth;
+        // converts number to percentage width
+        switch(size) {
+            case "1":
+                newWidth = 25;
+                break;
+            case "2":
+                newWidth = 33.33;
+                break;
+            case "3":
+                newWidth = 50;
+                break;
+            default:
+                console.log("bug in sizeSwitcher");
+        }
+
+
+        // updates each pizza container's width
         for (var i = 0; i < pizzaContainers.length; i++) {
-            var dx = determineDx(elemWidth, size, pizzaWindowWidth);
-            var newwidth = (elemWidth + dx) + 'px';
-            pizzaContainers[i].style.width = newwidth;
+            pizzaContainers[i].style.width = newWidth + "%";
         }
     }
 

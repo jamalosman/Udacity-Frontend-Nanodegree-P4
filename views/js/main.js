@@ -12,9 +12,12 @@ Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
 // Number of pizzas on the page
+
 window.pizzaCount = 200;
 
-var items, allItems, lastScroll;
+var items;
+var allItems;
+var lastScroll;
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
@@ -421,19 +424,20 @@ var pizzaElementGenerator = function(i) {
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
+    "use strict";
     window.performance.mark("mark_start_resize"); // User Timing API function
 
     // Changes the value for the size of the pizza above the slider
     function changeSliderLabel(size) {
         switch (size) {
             case "1":
-                document.querySelector("#pizzaSize").innerHTML = "Small";
+                document.getElementById("pizzaSize").innerHTML = "Small";
                 return;
             case "2":
-                document.querySelector("#pizzaSize").innerHTML = "Medium";
+                document.getElementById("pizzaSize").innerHTML = "Medium";
                 return;
             case "3":
-                document.querySelector("#pizzaSize").innerHTML = "Large";
+                document.getElementById("pizzaSize").innerHTML = "Large";
                 return;
             default:
                 console.log("bug in changeSliderLabel");
@@ -443,7 +447,7 @@ var resizePizzas = function(size) {
     changeSliderLabel(size);
 
     // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
-    function determineDx(elemWidth, size, pizzaWindowWidth) {
+    function determineDx(elemWidth, size) {
 
 
         // TODO: change to 3 sizes? no more xl?
@@ -460,7 +464,8 @@ var resizePizzas = function(size) {
 
     // Iterates through pizza elements on the page and changes their widths
     function changePizzaSizes(size) {
-        var pizzaContainers = document.querySelectorAll(".randomPizzaContainer");
+        "use strict";
+        var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
         var newWidth;
 
         // converts number to percentage width
@@ -499,8 +504,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
-    var pizzasDiv = document.getElementById("randomPizzas");
+var pizzasDiv = document.getElementById("randomPizzas");
+for (var i = 2; i < 30; i++) {
     pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -542,15 +547,16 @@ function getPositionMultipliers() {
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
     // if the scroll position has changed
+    "use strict";
     if (document.body.scrollTop != lastScroll) {
         frame++;
         window.performance.mark("mark_start_frame");
 
         // gets up to date multipliers
         var multipliers = getPositionMultipliers();
-
+        var phase;
         for (var i = 0; i < items.length; i++) {
-            var phase = multipliers[i % 5];
+            phase = multipliers[i % 5];
             items[i].style.left = items[i].basicLeft + phase + 'px';
         }
 
@@ -587,15 +593,19 @@ function populateItems() {
         if (isElementInViewport(allItems[i])) {
             items.push(allItems[i]);
         }
-    };
+    }
 }
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
     var cols = 8;
+    
+    // dynamically calculate the number of pizzas
+    var rows = Math.floor(window.screen.height / 100);
+    var pizzaCount = rows * cols;
     var s = 256;
     allItems = [];
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 40; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
         elem.src = "images/pizza.png";
